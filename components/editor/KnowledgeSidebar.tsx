@@ -10,7 +10,7 @@ export function KnowledgeSidebar({
 }: {
   documentId: Id<"documents">;
 }) {
-  const { isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
   const items = useQuery(
     api.knowledge.listByDocument,
     isAuthenticated ? { documentId } : "skip",
@@ -21,6 +21,18 @@ export function KnowledgeSidebar({
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  if (isLoading) {
+    return (
+      <aside className="soft-panel flex h-full min-h-0 flex-col overflow-hidden p-4 text-sm text-ink-muted">
+        Loading…
+      </aside>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();

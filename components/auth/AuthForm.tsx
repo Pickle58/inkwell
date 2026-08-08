@@ -10,6 +10,7 @@ export function AuthForm() {
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form
@@ -56,16 +57,59 @@ export function AuthForm() {
 
       <label className="block space-y-2">
         <span className="text-sm text-ink-muted">Password</span>
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={8}
-          autoComplete={
-            flow === "signIn" ? "current-password" : "new-password"
-          }
-          className="w-full rounded-xl border border-rule bg-paper px-4 py-3 outline-none transition focus:border-accent"
-        />
+        <div className="relative">
+          <input
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            minLength={8}
+            autoComplete={
+              flow === "signIn" ? "current-password" : "new-password"
+            }
+            className="w-full rounded-xl border border-rule bg-paper px-4 py-3 pr-12 outline-none transition focus:border-accent"
+          />
+          <button
+            type="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+            onClick={() => setShowPassword((visible) => !visible)}
+            className="absolute inset-y-0 right-0 flex items-center px-3 text-ink-muted transition hover:text-ink"
+          >
+            {showPassword ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-5"
+                aria-hidden="true"
+              >
+                <path d="M3 3l18 18" />
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                <path d="M9.9 5.1A10.5 10.5 0 0 1 12 5c7 0 10 7 10 7a13.3 13.3 0 0 1-1.7 2.6" />
+                <path d="M6.6 6.6C4 8.4 2.5 11 2 12s3 7 10 7a10.3 10.3 0 0 0 4.1-.8" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-5"
+                aria-hidden="true"
+              >
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
       </label>
 
       <input name="flow" type="hidden" value={flow} />

@@ -7,11 +7,21 @@ import { formatSavedAt } from "@/lib/format";
 import { CreateDocumentButton } from "./CreateDocumentButton";
 
 export function DocumentList() {
-  const { isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
   const documents = useQuery(
     api.documents.list,
     isAuthenticated ? {} : "skip",
   );
+
+  if (isLoading) {
+    return (
+      <div className="soft-panel p-8 text-ink-muted">Loading documents…</div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (documents === undefined) {
     return (

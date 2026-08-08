@@ -17,7 +17,7 @@ export function AiChatSidebar({
   documentId: Id<"documents">;
   selectedText: string;
 }) {
-  const { isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
   const messages = useQuery(
     api.chat.listByDocument,
     isAuthenticated ? { documentId } : "skip",
@@ -32,6 +32,18 @@ export function AiChatSidebar({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages?.length, sending]);
+
+  if (isLoading) {
+    return (
+      <aside className="soft-panel flex h-full min-h-0 flex-col overflow-hidden p-4 text-sm text-ink-muted">
+        Loading chat…
+      </aside>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
