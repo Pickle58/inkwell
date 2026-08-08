@@ -10,12 +10,31 @@ type PolarCheckoutResponse = {
   error?: string;
 };
 
-function polarApiBase(): string {
+type PolarServer = "sandbox" | "production";
+
+function polarServer(): PolarServer {
   const server = (process.env.POLAR_SERVER ?? "sandbox").trim().toLowerCase();
-  if (server === "production") {
-    return "https://api.polar.sh/v1";
+  return server === "production" ? "production" : "sandbox";
+}
+
+function polarApiBase(server: PolarServer): string {
+  return server === "production"
+    ? "https://api.polar.sh/v1"
+    : "https://sandbox-api.polar.sh/v1";
+}
+
+function assertCheckoutUrlMatchesServer(url: string, server: PolarServer) {
+  const host = new URL(url).host;
+  if (server === "sandbox" && host !== "sandbox.polar.sh") {
+    throw new Error(
+      `Expected a sandbox.polar.sh checkout URL, got ${host}. Check POLAR_SERVER=sandbox and that POLAR_ACCESS_TOKEN is a sandbox OAT.`,
+    );
   }
-  return "https://sandbox-api.polar.sh/v1";
+  if (server === "production" && host !== "polar.sh" && host !== "buy.polar.sh") {
+    throw new Error(
+      `Unexpected production checkout host ${host}. Check Polar configuration.`,
+    );
+  }
 }
 
 export const createCheckout = action({
@@ -41,12 +60,13 @@ export const createCheckout = action({
       );
     }
 
+    const server = polarServer();
     const siteUrl = (process.env.SITE_URL ?? "http://localhost:3000").replace(
       /\/$/,
       "",
     );
 
-    const response = await fetch(`${polarApiBase()}/checkouts/`, {
+    const response = await fetch(`${polarApiBase(server)}/checkouts/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -63,10 +83,17 @@ export const createCheckout = action({
 
     const payload = (await response.json()) as PolarCheckoutResponse;
     if (!response.ok || !payload.url) {
-      console.error("Polar checkout create failed", response.status, payload);
-      throw new Error("Could not create Polar checkout session");
+      console.error("Polar checkout create failed", {
+        status: response.status,
+        server,
+        payload,
+      });
+      throw new Error(
+        `Could not create Polar ${server} checkout session (${response.status}).`,
+      );
     }
 
+    assertCheckoutUrlMatchesServer(payload.url, server);
     return { url: payload.url };
   },
 });

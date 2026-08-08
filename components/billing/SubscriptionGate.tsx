@@ -77,8 +77,12 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
       });
     } catch (error) {
       console.error("Failed to open Polar checkout", error);
+      const message =
+        error instanceof Error ? error.message : "Could not open checkout.";
       setCheckoutError(
-        "Could not open checkout. Confirm this site is listed under Polar Embedding hosts.",
+        message.includes("Embedding") || message.includes("embed")
+          ? "Could not open checkout. Confirm localhost:3000 is listed under Polar Embedding hosts (sandbox)."
+          : message,
       );
       setOpeningCheckout(false);
     }
