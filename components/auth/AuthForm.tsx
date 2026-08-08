@@ -55,10 +55,16 @@ export function AuthForm() {
         />
       </label>
 
-      <label className="block space-y-2">
-        <span className="text-sm text-ink-muted">Password</span>
+      <div className="block space-y-2">
+        <label
+          htmlFor="auth-password"
+          className="block text-sm text-ink-muted"
+        >
+          Password
+        </label>
         <div className="relative">
           <input
+            id="auth-password"
             name="password"
             type={showPassword ? "text" : "password"}
             required
@@ -110,7 +116,7 @@ export function AuthForm() {
             )}
           </button>
         </div>
-      </label>
+      </div>
 
       <input name="flow" type="hidden" value={flow} />
 

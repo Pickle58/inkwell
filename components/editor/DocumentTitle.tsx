@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 
+function normalizeTitle(value: string) {
+  return value.trim() || "Untitled";
+}
+
 export function DocumentTitle({
   documentId,
   title,
@@ -17,6 +21,12 @@ export function DocumentTitle({
   const updateTitle = useMutation(api.documents.updateTitle);
   const [draft, setDraft] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const generationRef = useRef(0);
+
+  if (draft !== null && draft === title) {
+    setDraft(null);
+  }
+
   const displayValue = draft ?? title;
 
   useEffect(() => {
@@ -35,12 +45,21 @@ export function DocumentTitle({
         setDraft(next);
         if (timerRef.current) clearTimeout(timerRef.current);
         onSavingChange(true);
+        const generation = ++generationRef.current;
         timerRef.current = setTimeout(() => {
+          const persisted = normalizeTitle(next);
           void updateTitle({ documentId, title: next })
-            .catch(() => undefined)
-            .finally(() => {
-              setDraft((current) => (current === next ? null : current));
+            .then(() => {
+              if (generation !== generationRef.current) return;
+              setDraft((current) => {
+                if (current === null) return null;
+                if (current !== next) return current;
+                return persisted;
+              });
               onSavingChange(false);
+            })
+            .catch(() => {
+              // Keep draft and saving state so a failed/stale save is not marked saved.
             });
         }, 700);
       }}

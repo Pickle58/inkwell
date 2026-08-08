@@ -13,17 +13,7 @@ export function DocumentList() {
     isAuthenticated ? {} : "skip",
   );
 
-  if (isLoading) {
-    return (
-      <div className="soft-panel p-8 text-ink-muted">Loading documents…</div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  if (documents === undefined) {
+  if (isLoading || documents === undefined) {
     return (
       <div className="soft-panel p-8 text-ink-muted">Loading documents…</div>
     );
