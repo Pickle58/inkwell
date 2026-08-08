@@ -1,6 +1,10 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { requireOwnedDocument, requireUserId } from "./lib/ownership";
+import {
+  requireOwnedDocument,
+  requireSubscribedUserId,
+  requireUserId,
+} from "./lib/ownership";
 
 export const list = query({
   args: {},
@@ -30,7 +34,7 @@ export const get = query({
 export const create = mutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUserId(ctx);
+    const userId = await requireSubscribedUserId(ctx);
     const now = Date.now();
     return await ctx.db.insert("documents", {
       userId,
