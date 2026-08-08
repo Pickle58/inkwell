@@ -11,12 +11,16 @@
 import type * as ai from "../ai.js";
 import type * as aiHelpers from "../aiHelpers.js";
 import type * as auth from "../auth.js";
+import type * as billing from "../billing.js";
+import type * as billingActions from "../billingActions.js";
 import type * as chat from "../chat.js";
 import type * as documents from "../documents.js";
 import type * as documentsInternal from "../documentsInternal.js";
 import type * as http from "../http.js";
 import type * as knowledge from "../knowledge.js";
 import type * as lib_ownership from "../lib/ownership.js";
+import type * as lib_polarWebhook from "../lib/polarWebhook.js";
+import type * as lib_subscriptionAccess from "../lib/subscriptionAccess.js";
 import type * as users from "../users.js";
 
 import type {
@@ -29,12 +33,16 @@ declare const fullApi: ApiFromModules<{
   ai: typeof ai;
   aiHelpers: typeof aiHelpers;
   auth: typeof auth;
+  billing: typeof billing;
+  billingActions: typeof billingActions;
   chat: typeof chat;
   documents: typeof documents;
   documentsInternal: typeof documentsInternal;
   http: typeof http;
   knowledge: typeof knowledge;
   "lib/ownership": typeof lib_ownership;
+  "lib/polarWebhook": typeof lib_polarWebhook;
+  "lib/subscriptionAccess": typeof lib_subscriptionAccess;
   users: typeof users;
 }>;
 

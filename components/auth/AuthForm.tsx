@@ -40,7 +40,7 @@ export function AuthForm() {
         <p className="text-ink-muted">
           {flow === "signIn"
             ? "Sign in to open your documents."
-            : "Start writing with Inkwell."}
+            : "Create an account to start your free trial."}
         </p>
       </div>
 
