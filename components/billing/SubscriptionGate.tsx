@@ -4,7 +4,11 @@ import { PolarEmbedCheckout } from "@polar-sh/checkout/embed";
 import { useAction, useConvexAuth, useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/convex/_generated/api";
-import { POLAR_MONTHLY_PRICE_LABEL, TRIAL_BENEFITS } from "@/lib/polar";
+import {
+  POLAR_MONTHLY_PRICE_LABEL,
+  TRIAL_BENEFITS,
+  buildPolarCheckoutUrl,
+} from "@/lib/polar";
 
 type CheckoutInstance = Awaited<ReturnType<typeof PolarEmbedCheckout.create>>;
 
