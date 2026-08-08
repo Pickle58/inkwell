@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { useState, type FormEvent } from "react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -10,7 +10,11 @@ export function KnowledgeSidebar({
 }: {
   documentId: Id<"documents">;
 }) {
-  const items = useQuery(api.knowledge.listByDocument, { documentId });
+  const { isAuthenticated } = useConvexAuth();
+  const items = useQuery(
+    api.knowledge.listByDocument,
+    isAuthenticated ? { documentId } : "skip",
+  );
   const add = useMutation(api.knowledge.add);
   const remove = useMutation(api.knowledge.remove);
   const [title, setTitle] = useState("");

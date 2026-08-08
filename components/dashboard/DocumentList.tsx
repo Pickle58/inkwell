@@ -1,13 +1,17 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import Link from "next/link";
 import { api } from "@/convex/_generated/api";
 import { formatSavedAt } from "@/lib/format";
 import { CreateDocumentButton } from "./CreateDocumentButton";
 
 export function DocumentList() {
-  const documents = useQuery(api.documents.list);
+  const { isAuthenticated } = useConvexAuth();
+  const documents = useQuery(
+    api.documents.list,
+    isAuthenticated ? {} : "skip",
+  );
 
   if (documents === undefined) {
     return (

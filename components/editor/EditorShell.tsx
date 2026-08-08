@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import Link from "next/link";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
@@ -16,7 +16,11 @@ export function EditorShell({
 }: {
   documentId: Id<"documents">;
 }) {
-  const document = useQuery(api.documents.get, { documentId });
+  const { isAuthenticated } = useConvexAuth();
+  const document = useQuery(
+    api.documents.get,
+    isAuthenticated ? { documentId } : "skip",
+  );
   const [saving, setSaving] = useState(false);
   const [selectedText, setSelectedText] = useState("");
   const [mobilePane, setMobilePane] = useState<"knowledge" | "doc" | "chat">(

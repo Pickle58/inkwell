@@ -1,6 +1,11 @@
 "use client";
 
-import { useAction, useMutation, useQuery } from "convex/react";
+import {
+  useAction,
+  useConvexAuth,
+  useMutation,
+  useQuery,
+} from "convex/react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -12,7 +17,11 @@ export function AiChatSidebar({
   documentId: Id<"documents">;
   selectedText: string;
 }) {
-  const messages = useQuery(api.chat.listByDocument, { documentId });
+  const { isAuthenticated } = useConvexAuth();
+  const messages = useQuery(
+    api.chat.listByDocument,
+    isAuthenticated ? { documentId } : "skip",
+  );
   const assist = useAction(api.ai.assist);
   const clear = useMutation(api.chat.clear);
   const [input, setInput] = useState("");
