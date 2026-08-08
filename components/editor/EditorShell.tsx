@@ -16,7 +16,7 @@ export function EditorShell({
 }: {
   documentId: Id<"documents">;
 }) {
-  const { isAuthenticated } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
   const document = useQuery(
     api.documents.get,
     isAuthenticated ? { documentId } : "skip",
@@ -26,6 +26,18 @@ export function EditorShell({
   const [mobilePane, setMobilePane] = useState<"knowledge" | "doc" | "chat">(
     "doc",
   );
+
+  if (isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center text-ink-muted">
+        Loading document…
+      </main>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (document === undefined) {
     return (
