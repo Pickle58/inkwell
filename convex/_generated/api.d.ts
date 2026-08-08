@@ -12,6 +12,7 @@ import type * as ai from "../ai.js";
 import type * as aiHelpers from "../aiHelpers.js";
 import type * as auth from "../auth.js";
 import type * as billing from "../billing.js";
+import type * as billingActions from "../billingActions.js";
 import type * as chat from "../chat.js";
 import type * as documents from "../documents.js";
 import type * as documentsInternal from "../documentsInternal.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   aiHelpers: typeof aiHelpers;
   auth: typeof auth;
   billing: typeof billing;
+  billingActions: typeof billingActions;
   chat: typeof chat;
   documents: typeof documents;
   documentsInternal: typeof documentsInternal;

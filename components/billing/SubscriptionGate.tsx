@@ -1,14 +1,10 @@
 "use client";
 
 import { PolarEmbedCheckout } from "@polar-sh/checkout/embed";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useAction, useConvexAuth, useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/convex/_generated/api";
-import {
-  POLAR_MONTHLY_PRICE_LABEL,
-  TRIAL_BENEFITS,
-  buildPolarCheckoutUrl,
-} from "@/lib/polar";
+import { POLAR_MONTHLY_PRICE_LABEL, TRIAL_BENEFITS } from "@/lib/polar";
 
 type CheckoutInstance = Awaited<ReturnType<typeof PolarEmbedCheckout.create>>;
 
@@ -19,6 +15,7 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
     isAuthenticated ? {} : "skip",
   );
   const viewer = useQuery(api.users.viewer, isAuthenticated ? {} : "skip");
+  const createCheckout = useAction(api.billingActions.createCheckout);
   const [openingCheckout, setOpeningCheckout] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyTimedOut, setVerifyTimedOut] = useState(false);
@@ -61,10 +58,10 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
     setOpeningCheckout(true);
 
     try {
-      const checkout = await PolarEmbedCheckout.create(
-        buildPolarCheckoutUrl(viewer.email),
-        { theme: "light" },
-      );
+      // Create a Polar Checkout Session on the server so sandbox/live is
+      // controlled by Convex env (POLAR_SERVER), not a production buy link.
+      const { url } = await createCheckout({});
+      const checkout = await PolarEmbedCheckout.create(url, { theme: "light" });
       checkoutRef.current = checkout;
 
       checkout.addEventListener("success", (event) => {
