@@ -62,10 +62,29 @@ export function SubscriptionGate({ children }: { children: React.ReactNode }) {
     setOpeningCheckout(true);
 
     try {
-      // Create a Polar Checkout Session on the server so sandbox/live is
-      // controlled by Convex env (POLAR_SERVER), not a production buy link.
-      const { url } = await createCheckout({});
-      const checkout = await PolarEmbedCheckout.create(url, { theme: "light" });
+      // Prefer a server-created sandbox session (embed_origin + POLAR_SERVER).
+      // Fall back to the sandbox checkout link if Convex Polar env isn't set yet.
+      let checkoutUrl: string;
+      try {
+        const session = await createCheckout({});
+        checkoutUrl = session.url;
+      } catch (sessionError) {
+        console.warn(
+          "Polar createCheckout unavailable, using sandbox checkout link",
+          sessionError,
+        );
+        checkoutUrl = buildPolarCheckoutUrl(viewer.email);
+      }
+
+      if (!checkoutUrl.includes("sandbox.polar.sh") && !checkoutUrl.includes("sandbox-api.polar.sh")) {
+        throw new Error(
+          "Checkout URL is not sandbox. Set POLAR_SERVER=sandbox / use the sandbox checkout link.",
+        );
+      }
+
+      const checkout = await PolarEmbedCheckout.create(checkoutUrl, {
+        theme: "light",
+      });
       checkoutRef.current = checkout;
 
       checkout.addEventListener("success", (event) => {
