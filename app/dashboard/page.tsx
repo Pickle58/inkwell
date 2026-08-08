@@ -1,6 +1,6 @@
+import { AccountMenu } from "@/components/account/AccountMenu";
 import { CreateDocumentButton } from "@/components/dashboard/CreateDocumentButton";
 import { DocumentList } from "@/components/dashboard/DocumentList";
-import { SignOutButton } from "@/components/dashboard/SignOutButton";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -17,8 +17,8 @@ export default function DashboardPage() {
           <p className="mt-2 text-ink-muted">Your documents</p>
         </div>
         <div className="flex items-center gap-4">
-          <SignOutButton />
           <CreateDocumentButton className="rounded-xl bg-accent px-5 py-3 text-paper-elevated shadow-[var(--shadow-soft)]" />
+          <AccountMenu />
         </div>
       </header>
       <DocumentList />

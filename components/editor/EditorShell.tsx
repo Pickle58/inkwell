@@ -3,6 +3,7 @@
 import { useConvexAuth, useQuery } from "convex/react";
 import Link from "next/link";
 import { useState } from "react";
+import { AccountMenu } from "@/components/account/AccountMenu";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import { AiChatSidebar } from "./AiChatSidebar";
@@ -76,6 +77,9 @@ export function EditorShell({
           status={saving ? "saving" : "saved"}
           updatedAt={document.updatedAt}
         />
+        <div className="ml-auto shrink-0">
+          <AccountMenu />
+        </div>
       </header>
 
       <div className="flex gap-2 border-b border-rule px-4 py-2 md:hidden">

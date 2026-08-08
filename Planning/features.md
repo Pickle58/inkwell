@@ -1,0 +1,3 @@
+- Add account management
+- Allow users to highlight text and add it to the chat feature
+- Allow the user to add system instructions to guide the AI chat on the tone it should use, or writing guidelines

@@ -17,6 +17,7 @@ import type * as documentsInternal from "../documentsInternal.js";
 import type * as http from "../http.js";
 import type * as knowledge from "../knowledge.js";
 import type * as lib_ownership from "../lib/ownership.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   knowledge: typeof knowledge;
   "lib/ownership": typeof lib_ownership;
+  users: typeof users;
 }>;
 
 /**

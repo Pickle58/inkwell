@@ -8,6 +8,7 @@ const isAuthPage = createRouteMatcher(["/auth"]);
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/documents(.*)",
+  "/profile(.*)",
 ]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
